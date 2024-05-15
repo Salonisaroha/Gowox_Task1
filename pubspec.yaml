@@ -35,6 +35,12 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
+  nice_buttons:
+  device_scan_animation: ^0.0.6
+  hive_flutter:
+  flutter_nearby_connections:
+  get:
+  device_info:
 
 dev_dependencies:
   flutter_test:
@@ -77,11 +83,11 @@ flutter:
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
-  # example:
-  fonts:
-    - family: digitalt
-      fonts:
-        - asset: fonts/digitalt/Digitalt.ttf
+  # # example:
+  # fonts:
+  #   - family: digitalt
+  #     fonts:
+        # - asset: fonts/digitalt/Digitalt.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
