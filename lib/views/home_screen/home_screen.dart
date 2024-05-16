@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/core/P2pManager/p2p_manager.dart';
+import 'package:tic_tac_toe/core/assets/assets.dart';
 // import 'package:tic_tac_toe/core/assets/assets.dart';
 import 'package:tic_tac_toe/core/constants/enums.dart';
 import 'package:tic_tac_toe/core/local_db/local_db.dart';
@@ -25,7 +26,7 @@ class HomeScreen extends StatelessWidget {
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.only(right: 32.0),
-                  child: Image.asset('assets/images/banner.png'),
+                  child: Image.asset(Assets.images.banner)
                 ),
               ),
             ),

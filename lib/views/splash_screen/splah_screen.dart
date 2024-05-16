@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tic_tac_toe/core/assets/assets.dart';
 
 import 'package:tic_tac_toe/core/local_db/local_db.dart';
 import 'package:tic_tac_toe/core/widgets/background.dart';
@@ -38,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           Align(
             alignment: const Alignment(-0.2, -0.4),
-            child: Image.asset('assets/images/banner.png'),
+            child: Image.asset(Assets.images.banner),
           ),
           Align(
             alignment: const Alignment(0, 0.4),
