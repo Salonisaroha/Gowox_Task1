@@ -1,58 +1,31 @@
 import 'package:flutter/material.dart';
- import 'package:get/get.dart';
-import 'package:tic_tac_toe/core/constants/enums.dart';
 import 'package:tic_tac_toe/core/models/game_state.dart';
-import 'package:tic_tac_toe/core/P2pManager/p2p_manager.dart';
 import 'package:tic_tac_toe/core/widgets/background.dart';
-
-import 'widgets/tic_tac_toe_widget.dart';
+import 'package:tic_tac_toe/views/tic_tac_toe_screen/widgets/tic_tac_toe_widget.dart';
 
 class TicTacToeScreen extends StatefulWidget {
-  final P2pManager p2pManager;
-
-  const TicTacToeScreen({super.key, required this.p2pManager});
+  const TicTacToeScreen({super.key});
 
   @override
   State<TicTacToeScreen> createState() => _TicTacToeScreenState();
 }
 
 class _TicTacToeScreenState extends State<TicTacToeScreen> {
-  Player get player => widget.p2pManager.player;
+  GameState gameState = GameState();
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     return BackgroundWidget(
-        child: SafeArea(
-      child: Obx(() {
-        final gameState = Get.find<GameState>();
-        print(gameState.status);
-          return Column(
-            children: [
-              Expanded(
-                child: Center(
-                  child: Text(
-                    gameState.formattedStatus(player),
-                    style: textTheme.displayMedium?.copyWith(
-                        color: gameState.formattedStatusColor(player),
-                        shadows: [
-                          const BoxShadow(color: Colors.black38, blurRadius: 8)
-                        ]),
-                  ),
-                ),
-              ),
-              TicTacToeWidget(
-                  gameState: gameState,
-                  player: player,
-                  onSquareClicked: (index) {
-                    gameState.claimField(index);
-                    widget.p2pManager.sendGameState(gameState);
-                  }),
-              const Spacer()
-            ],
-          );
-        }
+      child: Center(
+        child: TicTacToeWidget(
+          gameState: gameState,
+          onSquareClicked: (index) {
+            setState(() {
+              gameState.claimField(index); // Call claimField on the gameState instance
+            });
+          },
+        ),
       ),
-    ));
+    );
   }
 }

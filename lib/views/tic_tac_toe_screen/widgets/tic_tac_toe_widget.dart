@@ -4,14 +4,8 @@ import 'package:tic_tac_toe/core/models/game_state.dart';
 
 class TicTacToeWidget extends StatelessWidget {
   final GameState gameState;
-  final Player player;
   final Function(int) onSquareClicked;
-
-  const TicTacToeWidget(
-      {super.key,
-      required this.gameState,
-      required this.onSquareClicked,
-      required this.player});
+  const TicTacToeWidget({super.key, required this.gameState, required this.onSquareClicked});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +13,7 @@ class TicTacToeWidget extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: 8.0,
-          mainAxisSpacing: 8.0,
-        ),
+            crossAxisCount: 3, crossAxisSpacing: 8.0, mainAxisSpacing: 8.0),
         itemCount: gameState.fields.length,
         shrinkWrap: true,
         itemBuilder: (context, index) {
@@ -34,26 +25,22 @@ class TicTacToeWidget extends StatelessWidget {
 
   Widget buildGridTile(int index) {
     return GestureDetector(
-      onTap: () {
-        bool condition = player == Player.p1
-            ? gameState.status == GameStatus.p1Turn
-            : gameState.status == GameStatus.p2Turn;
-        if (condition) {
-          onSquareClicked(index);
-        }
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 4),
-        ),
-        child: Center(
-          child: Text(
-            getPlayerSymbol(gameState.fields[index]),
-            style: const TextStyle(fontSize: 90, color: Colors.white),
-          ),
-        ),
-      ),
-    );
+        onTap: () {
+          if (gameState.status == GameStatus.p1Turn ||
+              gameState.status == GameStatus.p2Turn) {
+            onSquareClicked(index);
+          }
+        },
+        child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+            ),
+            child: Center(
+              child: Text(
+                getPlayerSymbol(gameState.fields[index]),
+                style: const TextStyle(fontSize: 90, color: Colors.white),
+              ),
+            )));
   }
 
   String getPlayerSymbol(Player? player) {

@@ -9,7 +9,7 @@ class CustomChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Container(
-      margin: const EdgeInsets.only(top: 18),
+      margin: const EdgeInsets.only(top:30),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
