@@ -1,8 +1,5 @@
-
-import 'package:tic_tac_toe/core/assets/images.dart';
+import 'images.dart';
 
 class Assets {
-  final  Images images = Images();
+  static  Images images = Images();
 }
-
-

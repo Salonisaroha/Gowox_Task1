@@ -27,10 +27,11 @@ class P2pManager {
   late Function() _onDevicesStateChanged;
   late DeviceType _deviceType;
 
-  P2pManager(
-      {required DeviceType deviceType,
-      required Function() onDevicesStateChanged,
-      required Function(dynamic) onNewMessageReceived}) {
+  P2pManager({
+    required DeviceType deviceType,
+    required Function() onDevicesStateChanged,
+    required Function(dynamic) onNewMessageReceived,
+  }) {
     _deviceType = deviceType;
     _onNewMessageReceived = onNewMessageReceived;
     _onDevicesStateChanged = onDevicesStateChanged;
@@ -44,50 +45,50 @@ class P2pManager {
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       devInfo = androidInfo.model;
-    }
-    if (Platform.isIOS) {
+    } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       devInfo = iosInfo.localizedModel;
     }
 
     await _nearbyService.init(
-        serviceType: 'mpconn',
-        deviceName: devInfo,
-        strategy: Strategy.P2P_CLUSTER,
-        callback: (isRunning) async {
-          if (isRunning) {
-            if (_deviceType == DeviceType.browser) {
-              await _nearbyService.stopBrowsingForPeers();
-              await Future.delayed(const Duration(microseconds: 200));
-              await _nearbyService.startBrowsingForPeers();
-            } else {
-              await _nearbyService.stopAdvertisingPeer();
-              await _nearbyService.stopBrowsingForPeers();
-              await Future.delayed(const Duration(microseconds: 200));
-              await _nearbyService.startAdvertisingPeer();
-              await _nearbyService.startBrowsingForPeers();
-            }
+      serviceType: 'mpconn',
+      deviceName: devInfo,
+      strategy: Strategy.P2P_CLUSTER,
+      callback: (isRunning) async {
+        if (isRunning) {
+          if (_deviceType == DeviceType.browser) {
+            await _nearbyService.stopBrowsingForPeers();
+            await Future.delayed(const Duration(milliseconds: 200));
+            await _nearbyService.startBrowsingForPeers();
+          } else {
+            await _nearbyService.stopAdvertisingPeer();
+            await _nearbyService.stopBrowsingForPeers();
+            await Future.delayed(const Duration(milliseconds: 200));
+            await _nearbyService.startAdvertisingPeer();
+            await _nearbyService.startBrowsingForPeers();
           }
-        });
+        }
+      },
+    );
 
-    _subscription =
-        _nearbyService.stateChangedSubscription(callback: (devicesList) async {
+    _subscription = _nearbyService.stateChangedSubscription(callback: (devicesList) async {
       connectedDevices = [];
       for (var element in devicesList) {
         debugPrint(
-            " deviceId: ${element.deviceId} | deviceName: ${element.deviceName} | state: ${element.state}");
+          " deviceId: ${element.deviceId} | deviceName: ${element.deviceName} | state: ${element.state}",
+        );
 
-        if (element.state != SessionState.connected) {
+        if (element.state == SessionState.connected) {
+          connectedDevices.add(element);
+        } else if (element.state == SessionState.notConnected) {
           await _connect(element.deviceId, element.deviceName);
         }
-        connectedDevices.add(element);
-        break;
       }
+      debugPrint("Connected devices: ${connectedDevices.length}");
       _onDevicesStateChanged();
     });
 
-    _receivedDataSubscription =
-        _nearbyService.dataReceivedSubscription(callback: (data) {
+    _receivedDataSubscription = _nearbyService.dataReceivedSubscription(callback: (data) {
       debugPrint("dataReceivedSubscription: ${jsonEncode(data)}");
       _onNewMessageReceived(data);
       debugPrint(jsonEncode(data));
@@ -114,7 +115,9 @@ class P2pManager {
       print(connectedDevices.first.deviceId);
       print(message);
       _nearbyService.sendMessage(
-          connectedDevices.first.deviceId, jsonEncode(message));
+        connectedDevices.first.deviceId,
+        jsonEncode(message),
+      );
     } else {
       print("NO DEVICE CONNECTED");
     }
@@ -123,6 +126,7 @@ class P2pManager {
   void sendGameState(GameState gameState) {
     print('herrrrr');
     _sendMessage(
-        {"data": gameState.fields.map((e) => (e?.index) ?? 2).toList()});
+      {"data": gameState.fields.map((e) => (e?.index) ?? 2).toList()},
+    );
   }
 }
